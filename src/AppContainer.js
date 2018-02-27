@@ -26,25 +26,28 @@ class AppContainer extends Component {
     }
 
     fetchJSONData() {
-        fetch('http://api.jsonbin.io/b/5a94409273fb541c61a57ede')
+        fetch('http://api.jsonbin.io/b/5a94e522859c4e1c4d5d8521')
         .then((response) => response.json())
         .then((responseJSON)=>{
             this.setState({
-                data: responseJSON.data
+                data: (responseJSON ? 'Got Data' : 'Waiting for data')
             });
             this.createFileStructure(responseJSON);
         })
         .catch((err)=>console.log(err));
     }
 
-    createFileStructure(obj) {
-        var path = RNFS.ExternalStorageDirectoryPath +'/'+ obj.name + '.txt';
-        RNFS.writeFile(path, obj.data, 'utf8')
-        .then((success) => {
-            console.log('File Written !!!');
-            this.state.isCreated = true;
-        })
-        .catch((err) => console.log(err.message));
+    createFileStructure(objects) {
+        objects.map((obj,index) => {
+            var path = RNFS.ExternalDirectoryPath + '/' + obj.name + '.txt';
+            console.log(path);
+            RNFS.writeFile(path, obj.data, 'utf8')
+            .then((success) => {
+                console.log('File Written !!!');
+                this.state.isCreated = true;
+            })
+            .catch((err) => console.log(err.message));
+        });
     }
 
     render() {
